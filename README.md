@@ -1,8 +1,8 @@
-# Final Project – Getting and Cleaning Data
+# Final Project â€“ Getting and Cleaning Data
 ## Files
 * final.txt - contains the data set created for this project.
-* run_analysis.R - 
-* codebook.md -  modifies and updates the original codebooks, “features_info.txt” and “activity_lablels.txt” (download from <https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip>),  and indicates all variables and summaries calculated, along with units, and other relevant information for creating the variables contained in “final.txt.”
+* run_analysis.R - R script called run_analysis.R that does the following. 1) Merges the training and the test sets to create one data set; 2) Extracts only the measurements on the mean and standard deviation for each measurement; 3) Uses descriptive activity names to name the activities in the data set; 4) Appropriately labels the data set with descriptive variable names; and 5) From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+* codebook.md -  modifies and updates the original codebooks, â€œfeatures_info.txtâ€ and â€œactivity_lablels.txtâ€ (download from <https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip>),  and indicates all variables and summaries calculated, along with units, and other relevant information for creating the variables contained in â€œfinal.txt.â€
 * README.md
 
 ## 0. Read the data -- assuming that the "data is in your working directory" per the submission instructions.
@@ -16,9 +16,9 @@ train_d <- read.table("X_train.txt", col.names = features$feature)
 train_s <- read.table("subject_train.txt", col.names = "subject")
 train_a <- read.table("y_train.txt", col.names = "code")
 ```
-* “activitiy_labels.txt” and “features.txt” were read using the ‘read.table’ function and column names were assigned based on a preliminary inspection of the files and consultation with “features_info.txt.” 
-* A preliminary inspection of the data revealed that: the file “features.txt” contained the same number of rows as the number of columns in the files “X_test.txt” and “X_train.txt.”   For this reason, and after consulting “features_info.txt,” it was determined that “features.txt” described the column names for both ““X_test.txt” and “X_train.txt.” 
-* Because both “y_train.txt” and “y_test.txt” contained the same unique set of values as the first column name in “activity_lables.txt”, column names  for all three of these files were assigned the same variable name, “code.”
+* â€œactivitiy_labels.txtâ€ and â€œfeatures.txtâ€ were read using the â€˜read.tableâ€™ function and column names were assigned based on a preliminary inspection of the files and consultation with â€œfeatures_info.txt.â€ 
+* A preliminary inspection of the data revealed that: the file â€œfeatures.txtâ€ contained the same number of rows as the number of columns in the files â€œX_test.txtâ€ and â€œX_train.txt.â€   For this reason, and after consulting â€œfeatures_info.txt,â€ it was determined that â€œfeatures.txtâ€ described the column names for both â€œâ€œX_test.txtâ€ and â€œX_train.txt.â€ 
+* Because both â€œy_train.txtâ€ and â€œy_test.txtâ€ contained the same unique set of values as the first column name in â€œactivity_lables.txtâ€, column names  for all three of these files were assigned the same variable name, â€œcode.â€
 
 ## 1. Merges the training and the test sets to create one data set.
 ```
@@ -33,13 +33,13 @@ train_set <- train_s %>%
         bind_cols(train_a) %>%
         bind_cols(train_d)
 ```
-*Because the number of rows, 2,947, in ‘test_d,’ ‘test_s,’ and ‘test_a’ were all equal, the function ‘bind_cols’ was used to create a single “test” data set named ‘test_set.’  
-*The same logic applied to all of the training data frames created in the step above and resulted in a new data frame ‘train_set.’
+*Because the number of rows, 2,947, in â€˜test_d,â€™ â€˜test_s,â€™ and â€˜test_aâ€™ were all equal, the function â€˜bind_colsâ€™ was used to create a single â€œtestâ€ data set named â€˜test_set.â€™  
+*The same logic applied to all of the training data frames created in the step above and resulted in a new data frame â€˜train_set.â€™
 ```
 one_set <- test_set %>%
         bind_rows(train_set)
 ```
-* Having the same number of columns, 563,  the data frames ‘test_set’ and ‘train_set’ were merged using the function ‘bind_rows’ to create a single data set, ‘one_set.’
+* Having the same number of columns, 563,  the data frames â€˜test_setâ€™ and â€˜train_setâ€™ were merged using the function â€˜bind_rowsâ€™ to create a single data set, â€˜one_set.â€™
 
 ## 2. Extracts only the measurements on the mean and standard deviation for each measurement.
 ```
@@ -47,23 +47,23 @@ sub_set <- one_set %>%
         select(1:2, contains("mean"), contains("std")) %>%
         select(-contains("angle"), -contains("Freq"))
 ```
-* Creates a new data frame, ‘sub_set’ from the a) the first two columns, b) the columns whose labels contain the word “mean”, and c) columns whose labels contain the string “std” of the single merged data frame ‘one_set’ created in the step above using the function ‘select’ with the argument ‘contains.’ 
-* Next, the function ‘select’ uses the argument ‘-contains’ is employed to remove columns containing the strings ‘angle’ and ‘Freq.’
-* These sub-setting decision were made to exclude variables whose names included the strings “Mean,” or “mean” but were not directly measured during the data collecting process.  Instead such variables were derived from the values of the others. 
+* Creates a new data frame, â€˜sub_setâ€™ from the a) the first two columns, b) the columns whose labels contain the word â€œmeanâ€, and c) columns whose labels contain the string â€œstdâ€ of the single merged data frame â€˜one_setâ€™ created in the step above using the function â€˜selectâ€™ with the argument â€˜contains.â€™ 
+* Next, the function â€˜selectâ€™ uses the argument â€˜-containsâ€™ is employed to remove columns containing the strings â€˜angleâ€™ and â€˜Freq.â€™
+* These sub-setting decision were made to exclude variables whose names included the strings â€œMean,â€ or â€œmeanâ€ but were not directly measured during the data collecting process.  Instead such variables were derived from the values of the others. 
 
 ## 3. Uses descriptive activity names to name the activities in the data set.
 ```
 tidy_set1 <- sub_set
 tidy_set1$code <- activities[tidy_set1$code, "activity"]
 ```
-* creates a new data frame ‘tidy_set1’ from the data frame ‘sub_set’ from the step above.
-* Reassigns values of the variable “code” in in ‘tidy_set’ to the descriptive values found in the data frame ‘activities.’  This is accomplished by subletting ‘activities’ by the value of ‘code’ in each row of ‘tidy_1’ along with the value of the corresponding row in the ‘activity’ column from the data frame ‘activities.’
+* creates a new data frame â€˜tidy_set1â€™ from the data frame â€˜sub_setâ€™ from the step above.
+* Reassigns values of the variable â€œcodeâ€ in in â€˜tidy_setâ€™ to the descriptive values found in the data frame â€˜activities.â€™  This is accomplished by subletting â€˜activitiesâ€™ by the value of â€˜codeâ€™ in each row of â€˜tidy_1â€™ along with the value of the corresponding row in the â€˜activityâ€™ column from the data frame â€˜activities.â€™
 ```
 tidy_set1$code <- tolower(tidy_set1$code)
 tidy_set1$code <- sub("_", "", tidy_set1$code)
 tidy_set1$code <- as.factor(tidy_set1$code)
 ```
-* These operations convert the text to lower case (using the function ‘tolower’), remove underscores (with the function ‘sub’), and convert the column to a factor (using the function ‘as.factor’) as suggested in the Week 4 video “Editing Text Variables.” 
+* These operations convert the text to lower case (using the function â€˜tolowerâ€™), remove underscores (with the function â€˜subâ€™), and convert the column to a factor (using the function â€˜as.factorâ€™) as suggested in the Week 4 video â€œEditing Text Variables.â€ 
 ## 4. Appropriately labels the data set with descriptive variable names.
 ```
 tidy_set2 <- tidy_set1
@@ -77,12 +77,12 @@ names(tidy_set2) <- gsub("Mag", "magnitude", names(tidy_set2))
 names(tidy_set2) <- gsub("\\.", "", names(tidy_set2))
 names(tidy_set2) <- tolower(names(tidy_set2))
 ```
-* Creates a new data frame ‘tidy-2’ from ‘tidy_1’ above.
-* Employs the function ‘sub’ to change the non-descriptive column name “code” to the descriptive column name “activity.”
-* Uses the function ‘gsub’ to change non-descriptive strings to descriptive strings (e.g. “t” to “time”, “Acc” to “accelerometer,” etc,).
-* Removes periods from column names with the function ‘gsub.’
-* Converts any remaining capital letters to lowercase with the function ‘tolower.’
-* These formatting decisions were made based on information contained in the Week 4 video “Editing Text Variables.” 
+* Creates a new data frame â€˜tidy-2â€™ from â€˜tidy_1â€™ above.
+* Employs the function â€˜subâ€™ to change the non-descriptive column name â€œcodeâ€ to the descriptive column name â€œactivity.â€
+* Uses the function â€˜gsubâ€™ to change non-descriptive strings to descriptive strings (e.g. â€œtâ€ to â€œtimeâ€, â€œAccâ€ to â€œaccelerometer,â€ etc,).
+* Removes periods from column names with the function â€˜gsub.â€™
+* Converts any remaining capital letters to lowercase with the function â€˜tolower.â€™
+* These formatting decisions were made based on information contained in the Week 4 video â€œEditing Text Variables.â€ 
 
 ## 5.Create a second, independent tidy data set with the average of each variable for each activity and each subject.
 ```
@@ -90,11 +90,11 @@ final_set <- tidy_set2 %>%
         group_by(subject, activity) %>%
         summarize_all(funs(mean))
 ```
-* Creates new data set, ‘final_set,’ from ‘tidy_set2’ from the step above.
-* Creates two groups using the variables ‘subject’ and ‘activity’ using the function ‘group_by.’  These groups will be employed by the function ‘summarize_all’ below.ze_all’ below.
-* The function ‘summarize all’ calculates averages for all the cross-tabbed groups created above using the function ‘mean’ as part of the argument ‘funs.’
+* Creates new data set, â€˜final_set,â€™ from â€˜tidy_set2â€™ from the step above.
+* Creates two groups using the variables â€˜subjectâ€™ and â€˜activityâ€™ using the function â€˜group_by.â€™  These groups will be employed by the function â€˜summarize_allâ€™ below.ze_allâ€™ below.
+* The function â€˜summarize allâ€™ calculates averages for all the cross-tabbed groups created above using the function â€˜meanâ€™ as part of the argument â€˜funs.â€™
 ```
 write.table(final_set, "Final.txt", row.names = FALSE)
 ```
-* The function ‘write.table’ creates a text file, “Final.txt,” from the data frame ‘final_set.’
-* Requires the argument ‘header = TRUE’ if used with the function ‘read.table’ to assign column names. 
+* The function â€˜write.tableâ€™ creates a text file, â€œFinal.txt,â€ from the data frame â€˜final_set.â€™
+* Requires the argument â€˜header = TRUEâ€™ if used with the function â€˜read.tableâ€™ to assign column names. 
