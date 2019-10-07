@@ -33,8 +33,8 @@ train_set <- train_s %>%
         bind_cols(train_a) %>%
         bind_cols(train_d)
 ```
-*Because the number of rows, 2,947, in ‘test_d,’ ‘test_s,’ and ‘test_a’ were all equal, the function ‘bind_cols’ was used to create a single “test” data set named ‘test_set.’  
-*The same logic applied to all of the training data frames created in the step above and resulted in a new data frame ‘train_set.’
+* Because the number of rows, 2,947, in ‘test_d,’ ‘test_s,’ and ‘test_a’ were all equal, the function ‘bind_cols’ was used to create a single “test” data set named ‘test_set.’  
+* The same logic applied to all of the training data frames created in the step above and resulted in a new data frame ‘train_set.’
 ```
 one_set <- test_set %>%
         bind_rows(train_set)
